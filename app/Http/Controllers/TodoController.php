@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Services\TodoService;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreTodoRequest;
+use App\Http\Requests\UpdateTodoRequest;
 
 class TodoController extends Controller
 {
@@ -20,26 +22,15 @@ class TodoController extends Controller
         return view('todo.index', compact('todos'));
     }
 
-    public function store(Request $request)
+    public function store(StoreTodoRequest $request)
     {
-        $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string'
-        ]);
-
-        $this->todoService->create($data);
+        $this->todoService->create($request->validated());
         return redirect()->route('todo.index')->with('success', 'Todo eklendi!');
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateTodoRequest $request, $id)
     {
-        $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'is_completed' => 'boolean'
-        ]);
-
-        $this->todoService->update($id, $data);
+        $this->todoService->update($id, $request->validated());
         return redirect()->route('todo.index')->with('success', 'Todo güncellendi!');
     }
 
