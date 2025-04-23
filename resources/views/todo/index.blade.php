@@ -3,87 +3,143 @@
 @section('title', 'Todo Listesi')
 
 @section('content')
-
-    <!-- Başlık ve mesaj -->
-    <div class="mb-10">
-        <h1 class="text-dark fw-bolder fs-2qx mb-4">📝 Todo Listesi</h1>
-
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
+    <div class="d-flex justify-content-between align-items-center mb-10">
+        <h1 class="text-dark fw-bolder fs-2qx">📋 Todo Listesi</h1>
+        <button id="openCreateModal" class="btn btn-primary">
+            <i class="fa fa-plus"></i> Yeni Todo
+        </button>
     </div>
 
-    <!-- Todo Ekleme Formu -->
-    <div class="card mb-10">
-        <div class="card-header">
-            <h3 class="card-title">Yeni Todo Ekle</h3>
-        </div>
-        <div class="card-body">
-            <form action="{{ route('todo.store') }}" method="POST" class="row g-3">
-                @csrf
-                <div class="col-md-5">
-                    <input type="text" name="title" class="form-control form-control-solid" placeholder="Başlık"
-                        required>
-                </div>
-                <div class="col-md-5">
-                    <input type="text" name="description" class="form-control form-control-solid" placeholder="Açıklama">
-                </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="fa fa-plus"></i> Ekle
-                    </button>
-                </div>
-            </form>
-        </div>
+    {{-- Table AJAX container --}}
+    <div id="todoTableContainer">
+        {{-- JS ile yüklenir --}}
     </div>
 
-    <!-- Todo Listeleme -->
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Todo Listesi</h3>
-        </div>
-        <div class="card-body pt-0">
-            <table class="table table-hover align-middle table-row-bordered table-row-solid gy-4">
-                <thead>
-                    <tr class="fw-bold fs-6 text-gray-800">
-                        <th>#</th>
-                        <th>Başlık</th>
-                        <th>Açıklama</th>
-                        <th>Durum</th>
-                        <th class="text-end">İşlem</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($todos as $todo)
-                        <tr>
-                            <td>{{ $todo->id }}</td>
-                            <td>{{ $todo->title }}</td>
-                            <td>{{ $todo->description }}</td>
-                            <td>
-                                @if ($todo->is_completed)
-                                    <span class="badge badge-light-success">Tamamlandı</span>
-                                @else
-                                    <span class="badge badge-light-warning">Bekliyor</span>
-                                @endif
-                            </td>
-                            <td class="text-end">
-                                <form action="{{ route('todo.destroy', $todo->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-sm btn-danger">
-                                        <i class="fa fa-trash"></i> Sil
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center text-muted">Henüz todo eklenmemiş.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
-
+    {{-- Modal container --}}
+    <div id="todoModalContainer"></div>
 @endsection
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function loadTodoTable() {
+            fetch("{{ route('todo.table') }}")
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById("todoTableContainer").innerHTML = html;
+                })
+                .catch(err => {
+                    console.error("Tablo yüklenemedi:", err);
+                    alert("Tablo yüklenemedi");
+                });
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM yüklendi");
+
+            const btn = document.getElementById('openCreateModal');
+            if (!btn) {
+                console.error("Yeni Todo butonu bulunamadı!");
+                return;
+            }
+
+            btn.addEventListener('click', function() {
+                console.log("Yeni Todo butonuna tıklandı");
+                fetch("{{ route('todo.modal.create') }}")
+                    .then(res => res.text())
+                    .then(html => {
+                        document.getElementById('todoModalContainer').innerHTML = html;
+
+                        const modalEl = document.getElementById('createTodoModal');
+                        if (!modalEl) {
+                            console.error("Modal bulunamadı!");
+                            return;
+                        }
+
+                        const modal = new bootstrap.Modal(modalEl);
+                        modal.show();
+                    })
+                    .catch(err => {
+                        console.error("Modal yüklenemedi:", err);
+                        alert("Modal yüklenemedi");
+                    });
+            });
+
+            loadTodoTable();
+        });
+
+
+
+
+        //////////////////////////
+
+        window.attachTableEvents = function() {
+            // Edit
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    fetch(`/todo/modal/edit/${id}`)
+                        .then(res => res.text())
+                        .then(html => {
+                            document.getElementById('todoModalContainer').innerHTML = html;
+                            const modalEl = document.getElementById('editTodoModal');
+                            if (modalEl) {
+                                const modal = new bootstrap.Modal(modalEl);
+                                modal.show();
+                            }
+                        });
+                });
+            });
+
+            // Delete
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    Swal.fire({
+                        title: 'Silmek istediğinize emin misiniz?',
+                        text: "Bu işlem geri alınamaz!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Evet, sil',
+                        cancelButtonText: 'Vazgeç'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            document.getElementById(`delete-form-${id}`).submit();
+                        }
+                    });
+                });
+            });
+        }
+
+        // İlk yükleme
+        function loadTodoTable() {
+            fetch("{{ route('todo.table') }}")
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById("todoTableContainer").innerHTML = html;
+                    attachTableEvents(); // 💥 Burada tanımlı fonksiyon çalışıyor
+                })
+                .catch(err => {
+                    console.error("Tablo yüklenemedi:", err);
+                });
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('openCreateModal')?.addEventListener('click', function() {
+                fetch("{{ route('todo.modal.create') }}")
+                    .then(res => res.text())
+                    .then(html => {
+                        document.getElementById('todoModalContainer').innerHTML = html;
+                        const modalEl = document.getElementById('createTodoModal');
+                        const modal = new bootstrap.Modal(modalEl);
+                        modal.show();
+                    });
+            });
+
+            loadTodoTable();
+        });
+    </script>
+@endpush
