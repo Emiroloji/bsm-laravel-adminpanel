@@ -8,11 +8,15 @@
     <!-- Metronic Global Styles -->
     <link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 </head>
 
 <body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled">
-
-    <!-- Wrapper -->
     <div class="d-flex flex-column flex-root">
         <div class="page d-flex flex-row flex-column-fluid">
 
@@ -26,11 +30,25 @@
                 @include('layouts.partials.navbar')
 
                 <!-- Content -->
-                <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-                    <div class="container">
+                <main
+                    style="
+                    padding-top: 80px;       /* Navbar altı */
+                    padding-left: 280px;     /* Sidebar sağı */
+                    padding-right: 24px;
+                    padding-bottom: 24px;    /* Ana alt boşluk */
+                    min-height: calc(100vh - 80px);
+                  ">
+                    <div
+                        style="
+                        margin-top: 16px;
+                        margin-left: 16px;
+                        margin-bottom: 16px;    /* Alttaki boşluk */
+                        border-radius: 12px;
+                        padding: 24px;
+                      ">
                         @yield('content')
                     </div>
-                </div>
+                </main>
 
             </div>
         </div>
