@@ -6,6 +6,13 @@
             </div>
 
             <div class="d-flex align-items-center gap-2">
+
+                <div class="d-flex justify-content-end gap-2 mb-4">
+                    <button onclick="exportToExcel()" class="btn btn-success">Excel İndir</button>
+                    <button onclick="exportToPDF()" class="btn btn-danger">PDF İndir</button>
+                    <button onclick="printTable()" class="btn btn-secondary">Yazdır</button>
+                </div>
+
                 <div class="d-flex align-items-center position-relative my-1">
                     <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-3"></i>
                     <input type="text" id="kt_filter_search"
