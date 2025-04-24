@@ -5,7 +5,7 @@ use App\Http\Controllers\TodoController;
 
 
 
-Route::get('/dashboard', function () {
+Route::get('/', function () {
     return view('dashboard');
 })->name('dashboard');
 Route::prefix('todo')->group(function () {
@@ -16,4 +16,5 @@ Route::prefix('todo')->group(function () {
     Route::post('/store', [TodoController::class, 'store'])->name('todo.store');
     Route::patch('/update/{id}', [TodoController::class, 'update'])->name('todo.update');
     Route::delete('/delete/{id}', [TodoController::class, 'destroy'])->name('todo.destroy');
+    Route::get('/todo/components/todoTableComponents', [TodoController::class, 'todoTableComponents'])->name('todo.components.todo-table');
 });

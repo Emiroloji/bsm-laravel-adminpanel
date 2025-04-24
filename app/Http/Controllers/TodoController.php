@@ -21,9 +21,14 @@ class TodoController extends Controller
         return view('todo.index');
 
     }
-    public function table()
+    public function table(Request $request)
     {
-        $todos = $this->todoService->getAll();
+        // Filtre parametrelerini al
+        $filters = $request->only(['search', 'date_start', 'date_end']);
+
+        // Servise gönder
+        $todos = $this->todoService->getAll($filters);
+
         return view('todo.table.todoTable', compact('todos'));
     }
     public function modalCreate()
@@ -68,8 +73,13 @@ class TodoController extends Controller
 
 
     public function modalEdit($id)
-{
-    $todo = $this->todoService->getById($id);
-    return view('todo.modal.edit', compact('todo'));
-}
+    {
+        $todo = $this->todoService->getById($id);
+        return view('todo.modal.edit', compact('todo'));
+    }
+
+    public function todoTableComponents()
+    {
+        return view('todo.components.todoTableComponents');
+    }
 }

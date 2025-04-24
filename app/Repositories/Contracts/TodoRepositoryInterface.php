@@ -4,7 +4,7 @@ namespace App\Repositories\Contracts;
 
 interface TodoRepositoryInterface
 {
-    public function all();
+    public function all(array $filters = []);
     public function find(int $id);
     public function create(array $data);
     public function update(int $id, array $data);

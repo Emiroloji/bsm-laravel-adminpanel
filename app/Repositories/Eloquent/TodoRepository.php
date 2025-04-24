@@ -7,9 +7,24 @@ use App\Repositories\Contracts\TodoRepositoryInterface;
 
 class TodoRepository implements TodoRepositoryInterface
 {
-    public function all()
+    public function all(array $filters = [])
     {
-        return Todo::all();
+        $query = \App\Models\Todo::query();
+
+        // Arama filtresi
+        if (!empty($filters['search'])) {
+            $query->where(function ($q) use ($filters) {
+                $q->where('title', 'like', '%' . $filters['search'] . '%')
+                ->orWhere('description', 'like', '%' . $filters['search'] . '%');
+            });
+        }
+
+        // Tarih aralığı filtresi
+        if (!empty($filters['date_start']) && !empty($filters['date_end'])) {
+            $query->whereBetween('created_at', [$filters['date_start'], $filters['date_end']]);
+        }
+
+        return $query->orderByDesc('created_at')->get();
     }
 
     public function find(int $id)

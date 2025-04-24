@@ -14,9 +14,9 @@ class TodoService
     }
 
 
-    public function getAll()
+    public function getAll(array $filters = [])
     {
-        return $this->todoRepository->all();
+        return $this->todoRepository->all($filters);
     }
 
     public function getById(int $id)
