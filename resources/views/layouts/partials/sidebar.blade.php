@@ -9,21 +9,46 @@
         data-kt-scroll-wrappers="#kt_aside, #kt_aside_menu" data-kt-scroll-offset="{default: '5px', lg: '75px'}"
         style="height: 100%;">
         <nav class="menu menu-column menu-rounded menu-sub-indention fw-semibold fs-6" data-kt-menu="true">
-            <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
-                <span class="menu-link">
-                    <span class="menu-icon">
-                        <i class="ki-duotone ki-element-11 fs-2"></i>
+
+
+
+
+
+            <div class="menu-item pt-5">
+                <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Dashboard</span>
+                </div>
+            </div>
+            <div class="menu-item">
+                <a class="menu-link" href="{{ url('/') }}">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
                     </span>
-                    <span class="menu-title">Todo</span>
-                    <span class="menu-arrow"></span>
-                </span>
+                    <span class="menu-title fw-bold text-uppercase fs-7">Anasayfa</span>
+                </a>
+            </div>
+
+
+
+
+
+            <div class="menu-item pt-5">
+                <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Todo</span>
+                </div>
+            </div>
+            <div data-kt-menu-trigger="click" class="menu-item menu-accordion"><span class="menu-link"><span
+                        class="menu-icon"><i class="ki-duotone ki-address-book fs-2"><span class="path1"></span><span
+                                class="path2"></span><span class="path3"></span></i></span><span
+                        class="menu-title">Todo Page</span><span class="menu-arrow"></span></span>
                 <div class="menu-sub menu-sub-accordion">
                     <div class="menu-item">
-                        <a class="menu-link active" href="{{ url('/todo') }}">
-                            <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                            <span class="menu-title">Todo Page</span>
+                        <a class="menu-link" href="{{ url('/todo') }}">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title fw-bold text-uppercase fs-7">Todo</span>
                         </a>
                     </div>
+
                 </div>
             </div>
         </nav>
@@ -46,4 +71,6 @@
             {{-- Diğer menü kalemleri --}}
         </div>
     </div>
+
+
 </div>
