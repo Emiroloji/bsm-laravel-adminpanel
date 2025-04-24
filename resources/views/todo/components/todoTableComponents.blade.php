@@ -1,27 +1,30 @@
 <div class="container-fluid">
-    <div class="card card-flush mt-3 mt-xl-6" style="width: 100%;">
-        <div class="card-header mt-5">
-            <div class="card-title flex-column">
-                <h3 class="fw-bold mb-1">Yapılacaklar listesi</h3>
+    <div class="card card-flush mt-3 mt-xl-6">
+        <div class="card-header mt-5 p-5">
+            <div class="card-title flex-column mb-1">
+                <h3 class="fw-bold fs-1 mb-3 ">
+                    Yapılacaklar Listesi <i class="mdi mdi-note-plus-outline fs-1"></i>
+                </h3>
             </div>
 
-            <div class="d-flex align-items-center gap-2">
+            <div class="d-flex align-items-center flex-wrap gap-5">
 
-                <div class="d-flex justify-content-end gap-2 mb-4">
-                    <button onclick="exportToExcel()" class="btn btn-success">Excel İndir</button>
-                    <button onclick="exportToPDF()" class="btn btn-danger">PDF İndir</button>
-                    <button onclick="printTable()" class="btn btn-secondary">Yazdır</button>
+
+                <div class="d-flex align-items-center position-relative">
+                    <i class="ki-duotone ki-magnifier fs-1 position-absolute ms-5"></i>
+                    <input type="text" id="kt_filter_search" class="form-control form-control-lg w-250px ps-12 py-3"
+                        placeholder="Ara...">
                 </div>
 
-                <div class="d-flex align-items-center position-relative my-1">
-                    <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-3"></i>
-                    <input type="text" id="kt_filter_search"
-                        class="form-control form-control-solid form-select-sm w-150px ps-9" placeholder="Ara...">
-                </div>
-
-                <div class="d-flex align-items-center my-1" data-kt-daterangepicker="true" style="width: 225px;">
-                    <input type="text" id="kt_filter_date" class="form-control form-control-solid form-select-sm"
+                <div class="d-flex align-items-center" data-kt-daterangepicker="true">
+                    <input type="text" id="kt_filter_date" class="form-control form-control-lg w-250px py-3"
                         placeholder="Tarih Aralığı Seçin" autocomplete="off" />
+                </div>
+
+                <div class="d-flex gap-4">
+                    <button onclick="exportToExcel()" class="btn btn-success px-5 py-3 fs-5">Excel İndir</button>
+                    <button onclick="exportToPDF()" class="btn btn-danger px-5 py-3 fs-5">PDF İndir</button>
+                    <button onclick="printTable()" class="btn btn-secondary px-5 py-3 fs-5">Yazdır</button>
                 </div>
             </div>
         </div>
