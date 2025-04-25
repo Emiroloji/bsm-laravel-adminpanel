@@ -17,4 +17,5 @@ Route::prefix('todo')->group(function () {
     Route::patch('/update/{id}', [TodoController::class, 'update'])->name('todo.update');
     Route::delete('/delete/{id}', [TodoController::class, 'destroy'])->name('todo.destroy');
     Route::get('/todo/components/todoTableComponents', [TodoController::class, 'todoTableComponents'])->name('todo.components.todo-table');
+    Route::get('/todo/components/todoReport', [TodoController::class, 'todoReportModal'])->name('todo.components.todo-report');
 });

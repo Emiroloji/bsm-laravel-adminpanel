@@ -38,4 +38,12 @@ class TodoService
     {
         return $this->todoRepository->delete($id);
     }
+    public function getTodoStats(): array
+    {
+        return [
+            'totalNotes' => $this->todoRepository->getAll()->count(),
+            'completedNotes' => $this->todoRepository->getCompleted()->count(),
+            'pendingNotes' => $this->todoRepository->getPending()->count(),
+        ];
+    }
 }

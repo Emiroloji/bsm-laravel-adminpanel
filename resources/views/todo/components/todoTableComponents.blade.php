@@ -3,8 +3,9 @@
         <div class="card-header mt-5 p-5">
             <div class="card-title flex-column mb-1">
                 <h3 class="fw-bold fs-1 mb-3 ">
-                    Yapılacaklar Listesi <i class="mdi mdi-note-plus-outline fs-1"></i>
+                    Yapılacaklar Listesi
                 </h3>
+
             </div>
 
             <div class="d-flex align-items-center flex-wrap gap-5">

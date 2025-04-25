@@ -21,6 +21,7 @@ class TodoController extends Controller
         return view('todo.index');
 
     }
+
     public function table(Request $request)
     {
         // Filtre parametrelerini al
@@ -31,14 +32,18 @@ class TodoController extends Controller
 
         return view('todo.table.todoTable', compact('todos'));
     }
+
     public function modalCreate()
     {
         return view('todo.modal.create');
     }
+
     public function store(StoreTodoRequest $request)
     {
         $this->todoService->create($request->validated());
-        return redirect()->route('todo.index')->with('success', 'Yeni todo eklendi!');    }
+        return redirect()->route('todo.index')->with('success', 'Yeni todo eklendi!');
+
+    }
 
     public function update(UpdateTodoRequest $request, $id)
     {
@@ -81,5 +86,11 @@ class TodoController extends Controller
     public function todoTableComponents()
     {
         return view('todo.components.todoTableComponents');
+    }
+
+    public function todoReportModal()
+    {
+        $stats = $this->todoService->getTodoStats();
+        return view('todo.components.todoReport', $stats);
     }
 }

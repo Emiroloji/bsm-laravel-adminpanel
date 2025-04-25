@@ -18,6 +18,8 @@
         </button>
     </div>
 
+    <div id="todoReportComponent"></div>
+
     <div id="todoComponent"></div>
 
     <div id="modalContainer"></div>
@@ -28,6 +30,7 @@
     <script>
         $(document).ready(function() {
             loadTodoComponent();
+            todoReportComponent();
         });
 
         function loadTodoComponent() {
@@ -53,6 +56,19 @@
                 },
                 error: function(xhr) {
                     console.error('Modal yüklenirken hata:', xhr.responseText);
+                }
+            });
+        }
+
+        function todoReportComponent() {
+            $.ajax({
+                url: '{{ route('todo.components.todo-report') }}',
+                type: 'GET',
+                success: function(data) {
+                    $('#todoReportComponent').html(data);
+                },
+                error: function(xhr) {
+                    console.error('Component yüklenirken hata:', xhr.responseText);
                 }
             });
         }

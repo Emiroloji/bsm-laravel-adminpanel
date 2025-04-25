@@ -49,4 +49,19 @@ class TodoRepository implements TodoRepositoryInterface
         $todo = Todo::findOrFail($id);
         return $todo->delete();
     }
+
+    public function getAll()
+    {
+        return Todo::query();
+    }
+
+    public function getCompleted()
+    {
+        return Todo::where('completed', 1);
+    }
+
+    public function getPending()
+    {
+        return Todo::where('completed', 0);
+    }
 }
