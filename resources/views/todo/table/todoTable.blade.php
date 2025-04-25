@@ -11,7 +11,7 @@
     <tbody>
         @forelse($todos as $todo)
             <tr>
-                <td>{{ $todo->id }}</td>
+                <td>{{ $loop->iteration }}</td>
                 <td>{{ $todo->title }}</td>
                 <td>{{ $todo->description }}</td>
                 <td>
@@ -67,4 +67,29 @@
             }
         });
     }
+
+
+    // table pagination 10 items
+    $(document).ready(function() {
+        $('#todoExportTable').DataTable({
+            searching: false,
+            lengthChange: false,
+            "pageLength": 10,
+            "language": {
+                "lengthMenu": "_MENU_",
+                "zeroRecords": "Kayıt bulunamadı",
+                "info": "Toplam _TOTAL_ kayıt",
+                "infoEmpty": "Kayıt yok",
+                "infoFiltered": "(filtrelenmiş _MAX_ kayıt arasından)",
+                "paginate": {
+                    "first": "<span style='color: blue;'>İlk</span>",
+                    "last": "<span style='color: blue;'>Son</span>",
+                    "next": "<i class='fas fa-angle-right' style='color: blue;'></i>",
+                    "previous": "<i class='fas fa-angle-left' style='color: blue;'></i>"
+                }
+            }
+        });
+
+
+    });
 </script>
