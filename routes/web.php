@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TodoController;
+use App\Http\Controllers\ContactController;
+
 
 
 
@@ -18,4 +20,10 @@ Route::prefix('todo')->group(function () {
     Route::delete('/delete/{id}', [TodoController::class, 'destroy'])->name('todo.destroy');
     Route::get('/todo/components/todoTableComponents', [TodoController::class, 'todoTableComponents'])->name('todo.components.todo-table');
     Route::get('/todo/components/todoReport', [TodoController::class, 'todoReportModal'])->name('todo.components.todo-report');
+});
+
+
+Route::prefix('crm')->group(function () {
+    Route::resource('contacts', ContactController::class)->except(['create','show']);
+    Route::get('contacts-table', [ContactController::class,'index'])->name('contacts.table');
 });
