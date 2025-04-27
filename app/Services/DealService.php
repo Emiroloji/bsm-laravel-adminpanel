@@ -1,12 +1,10 @@
 <?php
 namespace App\Services;
 
-/* 1. satır: interface yerine concrete class'ı kullan */
 use App\Repositories\Eloquent\DealRepository;
 
 class DealService
 {
-    /* 2. satır: type-hint artık DealRepository */
     public function __construct(private DealRepository $repo) {}
 
     public function paginate($p = 15)         { return $this->repo->paginate($p); }
