@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\DealController;
 
 
 
@@ -36,5 +37,8 @@ Route::prefix('crm')->group(function () {
     Route::get('companies-table', [CompanyController::class, 'index'])
          ->name('companies.table');
 
+
+    Route::resource('deals', DealController::class)->except(['create','show']);
+    Route::get('deals-table', [DealController::class, 'index'])->name('deals.table');
 
 });

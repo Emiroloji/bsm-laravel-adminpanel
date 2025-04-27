@@ -80,6 +80,14 @@
                         </a>
                     </div>
                 </div>
+                <div class="menu-sub menu-sub-accordion">
+                    <div class="menu-item">
+                        <a class="menu-link" href="{{ url('/crm/deals') }}">
+                            <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                            <span class="menu-title fw-bold text-uppercase fs-7">deals</span>
+                        </a>
+                    </div>
+                </div>
             </div>
 
 
