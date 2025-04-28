@@ -98,4 +98,20 @@ class DealController extends Controller
         $this->svc->destroy($id);
         return response()->json(['success' => true]);
     }
+
+
+
+    // DealController.php
+    public function kanban()
+    {
+        $stages = ['new','qualified','proposal','negotiation','won','lost'];
+
+        $deals  = $this->svc->paginate(9999);   // tüm fırsatlar
+        // her aşama için mutlaka anahtar oluştur
+        $group  = collect($stages)->mapWithKeys(fn($s)=>
+                    [$s => $deals->where('stage',$s)]
+                );
+
+        return view('deals.kanban', compact('group','stages'));
+    }
 }

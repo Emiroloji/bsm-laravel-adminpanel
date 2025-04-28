@@ -26,19 +26,15 @@ Route::prefix('todo')->group(function () {
 
 
 Route::prefix('crm')->group(function () {
+
     Route::resource('contacts', ContactController::class)->except(['create','show']);
     Route::get('contacts-table', [ContactController::class,'index'])->name('contacts.table');
 
-    // CRUD + index sayfası
-    Route::resource('companies', CompanyController::class)
-         ->except(['create', 'show']);   // /create & /show kullanılmıyor
+    Route::resource('companies', CompanyController::class)->except(['create','show']);
+    Route::get('companies-table', [CompanyController::class,'index'])->name('companies.table');
 
-    // AJAX tablo (index içinden çağrılıyor)
-    Route::get('companies-table', [CompanyController::class, 'index'])
-         ->name('companies.table');
-
+    Route::get('deals/kanban', [DealController::class,'kanban'])->name('deals.kanban');
 
     Route::resource('deals', DealController::class)->except(['create','show']);
-    Route::get('deals-table', [DealController::class, 'index'])->name('deals.table');
-
+    Route::get('deals-table', [DealController::class,'index'])->name('deals.table');
 });

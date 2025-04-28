@@ -11,7 +11,7 @@ class Contact extends Model
         'company_id','position','address','notes','is_active'
     ];
 
-    public function company()   // şimdilik null, sonra Company ekleyince tamamlanacak
+    public function company()
     {
         return $this->belongsTo(Company::class);
     }
