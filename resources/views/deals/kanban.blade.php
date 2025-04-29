@@ -1,80 +1,77 @@
 @extends('layouts.admin')
-@section('title', 'Deal Pipeline')
+
+@section('title', 'Deals Kanban')
 
 @section('content')
-
-    <div class="d-flex gap-4 overflow-auto">
-        @foreach ($stages as $s)
-            <div class="kanban-column flex-shrink-0" style="width:300px;">
-                <div class="bg-light-primary p-3 mb-3 rounded">
-                    <span class="fw-bold text-primary">{{ ucfirst($s) }}</span>
-                    <span class="badge bg-primary ms-2" id="sum-{{ $s }}">
-                        {{ ($group[$s] ?? collect())->sum('amount') }}
-                    </span>
-                </div>
-
-                <div class="kanban-list" id="list-{{ $s }}" data-stage="{{ $s }}">
-                    @foreach ($group[$s] ?? collect() as $d)
-                        <div class="deal-card card mb-3" data-id="{{ $d->id }}" data-amount="{{ $d->amount }}">
-                            <div class="card-body p-2">
-                                <div class="fw-bold">{{ $d->title }}</div>
-                                <small class="text-muted">{{ optional($d->company)->name }}</small><br>
-                                <span class="fw-bold">{{ number_format($d->amount, 2) }}</span>
+    <div class="row gx-3 kanban-board">
+        @foreach ($stages as $stage)
+            <div class="col">
+                <div class="card card-flush h-100">
+                    <div class="card-header">
+                        <h3 class="card-title text-capitalize">{{ $stage }}</h3>
+                    </div>
+                    <div class="card-body kanban-list" data-stage="{{ $stage }}" id="list-{{ $stage }}">
+                        @foreach ($group[$stage] as $deal)
+                            <div class="card mb-3 kanban-item" data-id="{{ $deal->id }}">
+                                <div class="card-body py-2 px-3">
+                                    <strong>{{ $deal->title }}</strong><br>
+                                    <small class="text-muted">{{ optional($deal->company)->name }}</small>
+                                </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
             </div>
         @endforeach
     </div>
+@endsection
 
-@endsection {{--  <<< EKLENDİ  --}}
+@push('styles')
+    <style>
+        .kanban-board {
+            display: flex;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+
+        .kanban-board .col {
+            min-width: 250px;
+        }
+
+        .kanban-list {
+            min-height: 200px;
+        }
+
+        .kanban-item {
+            cursor: grab;
+        }
+    </style>
+@endpush
 
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.kanban-list').forEach(listEl => {
+            new Sortable(listEl, {
+                group: 'deals-kanban',
+                animation: 150,
+                onEnd: evt => {
+                    const id = evt.item.dataset.id;
+                    const newStage = evt.to.dataset.stage;
 
-            const baseUrl = "{{ url('crm/deals') }}";
-
-            document.querySelectorAll('.kanban-list').forEach(list => {
-
-                Sortable.create(list, {
-                    group: 'deals',
-                    animation: 150,
-                    draggable: '.deal-card',
-
-                    onEnd: ({
-                        item,
-                        to,
-                        from
-                    }) => {
-                        const id = item.dataset.id;
-                        if (!/^\d+$/.test(id)) return;
-
-                        const amount = parseFloat(item.dataset.amount);
-                        const newStage = to.dataset.stage;
-                        const oldStage = from.dataset.stage;
-
-                        fetch(`${baseUrl}/${id}`, {
-                            method: 'PUT',
+                    fetch(`{{ url('crm/deals') }}/${id}/move`, {
+                            method: 'PATCH',
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                stage: newStage
+                                new_stage: newStage
                             })
-                        });
-
-                        const sum = s => document.getElementById(`sum-${s}`);
-                        sum(oldStage).textContent = (parseFloat(sum(oldStage).textContent) -
-                            amount).toFixed(2);
-                        sum(newStage).textContent = (parseFloat(sum(newStage).textContent) +
-                            amount).toFixed(2);
-                    }
-                });
-
+                        })
+                        .then(res => res.ok || Promise.reject(res))
+                        .catch(err => console.error('Kanban move error:', err));
+                }
             });
         });
     </script>

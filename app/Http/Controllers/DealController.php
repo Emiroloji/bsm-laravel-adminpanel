@@ -11,7 +11,6 @@ use App\Models\Contact;
 
 class DealController extends Controller
 {
-    /** @var DealService */
     private DealService $svc;
 
     public function __construct(DealService $svc)
@@ -29,7 +28,6 @@ class DealController extends Controller
             return view('deals.table', compact('deals'))->render();
         }
 
-        /*  Create modalındaki dropdown’lar için Company & Contact listesi  */
         $companies = Company::orderBy('name')->pluck('name', 'id');
         $contacts  = Contact::orderBy('first_name')
                      ->select(DB::raw("id, CONCAT(first_name,' ',last_name) as full_name"))
@@ -54,6 +52,7 @@ class DealController extends Controller
         ]);
 
         $this->svc->store($data);
+
         return response()->json(['success' => true]);
     }
 
@@ -87,6 +86,7 @@ class DealController extends Controller
         ]);
 
         $this->svc->update($id, $data);
+
         return response()->json(['success' => true]);
     }
 
@@ -96,22 +96,41 @@ class DealController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $this->svc->destroy($id);
+
         return response()->json(['success' => true]);
     }
 
-
-
-    // DealController.php
+    /* ----------------------------------------------------------
+     |  KANBAN  –  GET /crm/deals/kanban
+     * -------------------------------------------------------- */
     public function kanban()
     {
-        $stages = ['new','qualified','proposal','negotiation','won','lost'];
+        // Tüm aşamaları kesin sırayla tanımla
+        $stages = ['new', 'qualified', 'proposal', 'negotiation', 'won', 'lost'];
 
-        $deals  = $this->svc->paginate(9999);   // tüm fırsatlar
-        // her aşama için mutlaka anahtar oluştur
-        $group  = collect($stages)->mapWithKeys(fn($s)=>
-                    [$s => $deals->where('stage',$s)]
-                );
+        // Hepsini getir
+        $deals = $this->svc->paginate(9999);
 
-        return view('deals.kanban', compact('group','stages'));
+        // Her aşama için grupla
+        $group = collect($stages)
+            ->mapWithKeys(fn($s) => [
+                $s => $deals->where('stage', $s)
+            ]);
+
+        return view('deals.kanban', compact('group', 'stages'));
+    }
+
+    /* ----------------------------------------------------------
+     |  MOVE  –  PATCH /crm/deals/{id}/move
+     * -------------------------------------------------------- */
+    public function move(Request $request, int $id): JsonResponse
+    {
+        $request->validate([
+            'new_stage' => 'required|string|in:new,qualified,proposal,negotiation,won,lost',
+        ]);
+
+        $deal = $this->svc->move($id, $request->new_stage);
+
+        return response()->json($deal);
     }
 }
