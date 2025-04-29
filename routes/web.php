@@ -47,4 +47,14 @@ Route::prefix('crm')->group(function () {
 
     // 3) En sonda resource tanımı
     Route::resource('deals', DealController::class);
+
+
+    // Kanban, move ve resource tanımlarından önce:
+    Route::get('deals/{id}/export-excel', [DealController::class,'exportExcel'])
+         ->name('deals.export.excel');
+    Route::get('deals/{id}/export-pdf',   [DealController::class,'exportPdf'])
+         ->name('deals.export.pdf');
+
+    Route::get('deals/{id}/view-proposal', [DealController::class, 'viewProposal'])
+        ->name('deals.view.proposal');
 });

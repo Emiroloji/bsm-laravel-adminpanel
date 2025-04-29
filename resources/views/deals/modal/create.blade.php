@@ -11,6 +11,7 @@
 
                 <div class="modal-body py-10 px-lg-10">
                     <div class="row g-5">
+                        <!-- Mevcut alanlar -->
                         <div class="col-md-6 fv-row">
                             <label class="required form-label">Başlık</label>
                             <input type="text" name="title" class="form-control" required>
@@ -54,6 +55,32 @@
                             <textarea name="description" class="form-control" rows="2"></textarea>
                         </div>
                     </div>
+
+                    <hr>
+
+                    <!-- Teklif Kalemleri -->
+                    <h5>Teklif Kalemleri</h5>
+                    <table class="table table-bordered" id="items-table">
+                        <thead>
+                            <tr>
+                                <th>Ürün/Hizmet</th>
+                                <th>Adet</th>
+                                <th>Birim Fiyat</th>
+                                <th style="width:40px"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" name="items[0][name]" class="form-control" required></td>
+                                <td><input type="number" name="items[0][quantity]" class="form-control" min="1"
+                                        required></td>
+                                <td><input type="number" name="items[0][unit_price]" step="0.01"
+                                        class="form-control" min="0" required></td>
+                                <td><button type="button" class="btn btn-sm btn-danger remove-item">×</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" id="add-item" class="btn btn-sm btn-secondary">+ Kalem Ekle</button>
                 </div>
 
                 <div class="modal-footer flex-center">
@@ -63,3 +90,29 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    <script>
+        (function() {
+            let idx = 1;
+            const tbody = document.querySelector('#items-table tbody');
+            document.getElementById('add-item').addEventListener('click', () => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+          <td><input type="text" name="items[${idx}][name]" class="form-control" required></td>
+          <td><input type="number" name="items[${idx}][quantity]" class="form-control" min="1" required></td>
+          <td><input type="number" name="items[${idx}][unit_price]" step="0.01" class="form-control" min="0" required></td>
+          <td><button type="button" class="btn btn-sm btn-danger remove-item">×</button></td>
+        `;
+                tbody.appendChild(row);
+                idx++;
+            });
+
+            tbody.addEventListener('click', e => {
+                if (e.target.matches('.remove-item')) {
+                    e.target.closest('tr').remove();
+                }
+            });
+        })();
+    </script>
+@endpush

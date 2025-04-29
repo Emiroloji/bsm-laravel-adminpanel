@@ -12,11 +12,10 @@
 
     <div id="dealTable"></div>
 
-    {{-- Modallar --}}
-    @include('deals.modal.create') {{-- createModal --}}
-    <div id="editModalContent"></div> {{-- editModal AJAX ile buraya gelir --}}
+    @include('deals.modal.create')
+    <div id="editModalContent"></div>
+    @include('deals.modal.view-proposal')
 @endsection
-
 
 @push('scripts')
     <script>
@@ -24,24 +23,25 @@
             const R = {
                 list: "{{ route('deals.table') }}",
                 store: "{{ route('deals.store') }}",
-                base: "{{ url('crm/deals') }}" //  /{id}, /{id}/edit
+                base: "{{ url('crm/deals') }}"
             };
 
-            /* ---------- TABLE ---------- */
-            const loadDeals = () => $.get(R.list, h => $('#dealTable').html(h));
+            const loadDeals = () => {
+                $.get(R.list, html => {
+                    $('#dealTable').html(html);
+                });
+            };
 
-            /* ---------- CREATE ---------- */
             $('#btnCreate').on('click', () => $('#createModal').modal('show'));
-            $('#createForm').on('submit', e => {
+            $(document).on('submit', '#createForm', function(e) {
                 e.preventDefault();
-                $.post(R.store, $('#createForm').serialize())
+                $.post(R.store, $(this).serialize())
                     .done(() => {
                         $('#createModal').modal('hide');
                         loadDeals();
                     });
             });
 
-            /* ---------- EDIT ---------- */
             $(document).on('click', '.btn-edit', function() {
                 const id = $(this).data('id');
                 $.get(`${R.base}/${id}/edit`, html => {
@@ -53,36 +53,41 @@
                 e.preventDefault();
                 const id = $(this).data('id');
                 $.ajax({
-                        url: `${R.base}/${id}`,
-                        type: 'PUT',
-                        data: $(this).serialize()
-                    })
-                    .done(() => {
-                        $('#editModal').modal('hide');
-                        loadDeals();
-                    });
+                    url: `${R.base}/${id}`,
+                    type: 'PUT',
+                    data: $(this).serialize()
+                }).done(() => {
+                    $('#editModal').modal('hide');
+                    loadDeals();
+                });
             });
 
             /* ---------- DELETE ---------- */
             $(document).on('click', '.btn-delete', function() {
                 const id = $(this).data('id');
                 Swal.fire({
-                        text: 'Silinsin mi?',
-                        icon: 'warning',
-                        showCancelButton: true
-                    })
-                    .then(r => {
-                        if (r.isConfirmed) {
-                            $.ajax({
-                                    url: `${R.base}/${id}`,
-                                    type: 'DELETE',
-                                    data: {
-                                        _token: "{{ csrf_token() }}"
-                                    }
-                                })
-                                .done(loadDeals);
-                        }
-                    });
+                    text: 'Silinsin mi?',
+                    icon: 'warning',
+                    showCancelButton: true
+                }).then(r => {
+                    if (r.isConfirmed) {
+                        $.ajax({
+                            url: `${R.base}/${id}`,
+                            type: 'DELETE',
+                            data: {
+                                _token: "{{ csrf_token() }}"
+                            }
+                        }).done(loadDeals);
+                    }
+                });
+            });
+
+            /* ---------- VIEW PROPOSAL ---------- */
+            $(document).on('click', '.btn-view-proposal', function() {
+                const id = $(this).data('id');
+                const url = `{{ url('crm/deals') }}/${id}/view-proposal`;
+                $('#proposalFrame').attr('src', url);
+                $('#viewProposalModal').modal('show');
             });
 
             /* ---------- INIT ---------- */

@@ -1,41 +1,68 @@
-<table class="table align-middle table-row-dashed" id="kt_deal_table">
-    <thead>
-        <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-            <th>#</th>
-            <th>Başlık</th>
-            <th>Firma</th>
-            <th>Kişi</th>
-            <th>Tutar</th>
-            <th>Aşama</th>
-            <th>Kapanış</th>
-            <th class="text-end">İşlem</th>
-        </tr>
-    </thead>
-    <tbody class="text-gray-600 fw-semibold">
-        @foreach ($deals as $d)
-            <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $d->title }}</td>
-                <td>{{ optional($d->company)->name }}</td>
-                <td>{{ optional($d->contact)->first_name }} {{ optional($d->contact)->last_name }}</td>
-                <td>{{ number_format($d->amount, 2) }}</td>
-                <td>
-                    <span class="badge badge-light-primary">{{ ucfirst($d->stage) }}</span>
-                </td>
-                <td>{{ $d->close_date?->format('d.m.Y') }}</td>
-                <td class="text-end">
-                    <button class="btn btn-icon btn-sm btn-light-primary btn-edit" data-id="{{ $d->id }}">
-                        <i class="ki-duotone ki-pencil fs-2"></i>
-                    </button>
-                    <button class="btn btn-icon btn-sm btn-light-danger btn-delete" data-id="{{ $d->id }}">
-                        <i class="ki-duotone ki-trash fs-2"></i>
-                    </button>
-                </td>
-            </tr>
-        @endforeach
-    </tbody>
-</table>
+<div class="card">
+    <div class="card-header border-0 pt-6">
+        <div class="card-title">
+            <h3 class="fw-bold text-gray-800 mb-0">Fırsatlar</h3>
+        </div>
+        <div class="card-toolbar">
+            <button class="btn btn-primary" id="btnCreate">
+                <i class="ki-duotone ki-plus fs-2"></i> Yeni Fırsat
+            </button>
+        </div>
+    </div>
 
-<div class="mt-4">
-    {{ $deals->links('pagination::bootstrap-5') }}
+    <div class="card-body pt-0">
+        <div class="table-responsive">
+            <table id="deals_table" class="table table-row-dashed table-row-gray-200 align-middle gs-7 gy-7">
+                <thead>
+                    <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+                        <th class="min-w-30px">#</th>
+                        <th class="min-w-150px">Başlık</th>
+                        <th class="min-w-100px">Tutar</th>
+                        <th class="min-w-120px">Aşama</th>
+                        <th class="min-w-120px">Kapanış Tarihi</th>
+                        <th class="min-w-150px">Firma</th>
+                        <th class="min-w-150px">Kişi</th>
+                        <th class="text-center min-w-200px">İşlemler</th>
+                        <th class="text-center min-w-200px">Teklif İndir</th>
+                    </tr>
+                </thead>
+                <tbody class="fw-semibold text-gray-600">
+                    @foreach ($deals as $deal)
+                        <tr>
+                            <td>{{ $deal->id }}</td>
+                            <td>{{ $deal->title }}</td>
+                            <td>{{ number_format($deal->amount, 2) }} TL</td>
+                            <td>{{ ucfirst($deal->stage) }}</td>
+                            <td>{{ $deal->close_date?->format('d.m.Y') }}</td>
+                            <td>{{ $deal->company?->name }}</td>
+                            <td>{{ $deal->contact?->first_name }} {{ $deal->contact?->last_name }}</td>
+                            <td class="text-center">
+                                <button class="btn btn-light-primary btn-sm me-2 btn-edit"
+                                    data-id="{{ $deal->id }}">
+                                    <i class="ki-duotone ki-pencil fs-4"></i> Düzenle
+                                </button>
+                                <button class="btn btn-light-danger btn-sm btn-delete" data-id="{{ $deal->id }}">
+                                    <i class="ki-duotone ki-trash fs-4"></i> Sil
+                                </button>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-light-primary btn-sm me-2 btn-view-proposal"
+                                    data-id="{{ $deal->id }}">
+                                    <i class="ki-duotone ki-eye fs-4"></i> Görüntüle
+                                </button>
+                                <a href="{{ route('deals.export.excel', $deal->id) }}"
+                                    class="btn btn-light-success btn-sm me-2">
+                                    <i class="ki-duotone ki-file-excel fs-4"></i> Excel İndir
+                                </a>
+                                <a href="{{ route('deals.export.pdf', $deal->id) }}"
+                                    class="btn btn-light-danger btn-sm">
+                                    <i class="ki-duotone ki-file-pdf fs-4"></i> PDF İndir
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
