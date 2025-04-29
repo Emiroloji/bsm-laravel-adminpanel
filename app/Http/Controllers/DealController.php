@@ -8,10 +8,12 @@ use Illuminate\Support\Facades\DB;
 use App\Services\DealService;
 use App\Models\Company;
 use App\Models\Contact;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Exports\DealProposalExport;
 
 class DealController extends Controller
 {
-    /** @var DealService */
     private DealService $svc;
 
     public function __construct(DealService $svc)
@@ -29,7 +31,6 @@ class DealController extends Controller
             return view('deals.table', compact('deals'))->render();
         }
 
-        /*  Create modalındaki dropdown’lar için Company & Contact listesi  */
         $companies = Company::orderBy('name')->pluck('name', 'id');
         $contacts  = Contact::orderBy('first_name')
                      ->select(DB::raw("id, CONCAT(first_name,' ',last_name) as full_name"))
@@ -44,16 +45,23 @@ class DealController extends Controller
     public function store(Request $r): JsonResponse
     {
         $data = $r->validate([
-            'title'       => 'required|string|max:150',
-            'amount'      => 'nullable|numeric|min:0',
-            'stage'       => 'required|in:new,qualified,proposal,negotiation,won,lost',
-            'close_date'  => 'nullable|date',
-            'company_id'  => 'nullable|exists:companies,id',
-            'contact_id'  => 'nullable|exists:contacts,id',
-            'description' => 'nullable|string',
+            'title'              => 'required|string|max:150',
+            'amount'             => 'nullable|numeric|min:0',
+            'stage'              => 'required|in:new,qualified,proposal,negotiation,won,lost',
+            'close_date'         => 'nullable|date',
+            'company_id'         => 'nullable|exists:companies,id',
+            'contact_id'         => 'nullable|exists:contacts,id',
+            'description'        => 'nullable|string',
+            // items için
+            'items'              => 'nullable|array',
+            'items.*.name'       => 'required_with:items|string|max:255',
+            'items.*.quantity'   => 'required_with:items|integer|min:1',
+            'items.*.unit_price' => 'required_with:items|numeric|min:0',
         ]);
 
-        $this->svc->store($data);
+        // Servis imzası: create, delete, update – store(/destroy) yok
+        $this->svc->create($data);
+
         return response()->json(['success' => true]);
     }
 
@@ -77,41 +85,96 @@ class DealController extends Controller
     public function update(Request $r, int $id): JsonResponse
     {
         $data = $r->validate([
-            'title'       => 'required|string|max:150',
-            'amount'      => 'nullable|numeric|min:0',
-            'stage'       => 'required|in:new,qualified,proposal,negotiation,won,lost',
-            'close_date'  => 'nullable|date',
-            'company_id'  => 'nullable|exists:companies,id',
-            'contact_id'  => 'nullable|exists:contacts,id',
-            'description' => 'nullable|string',
+            'title'              => 'required|string|max:150',
+            'amount'             => 'nullable|numeric|min:0',
+            'stage'              => 'required|in:new,qualified,proposal,negotiation,won,lost',
+            'close_date'         => 'nullable|date',
+            'company_id'         => 'nullable|exists:companies,id',
+            'contact_id'         => 'nullable|exists:contacts,id',
+            'description'        => 'nullable|string',
+            // items için
+            'items'              => 'nullable|array',
+            'items.*.name'       => 'required_with:items|string|max:255',
+            'items.*.quantity'   => 'required_with:items|integer|min:1',
+            'items.*.unit_price' => 'required_with:items|numeric|min:0',
         ]);
 
         $this->svc->update($id, $data);
+
         return response()->json(['success' => true]);
     }
+
 
     /* ----------------------------------------------------------
      |  DELETE  –  DELETE /crm/deals/{id}
      * -------------------------------------------------------- */
     public function destroy(int $id): JsonResponse
     {
-        $this->svc->destroy($id);
+        // Service’da metot adı delete
+        $this->svc->delete($id);
+
         return response()->json(['success' => true]);
     }
 
-
-
-    // DealController.php
+    /* ----------------------------------------------------------
+     |  KANBAN  –  GET /crm/deals/kanban
+     * -------------------------------------------------------- */
     public function kanban()
     {
-        $stages = ['new','qualified','proposal','negotiation','won','lost'];
+        // Tüm aşamaları kesin sırayla tanımla
+        $stages = ['new', 'qualified', 'proposal', 'negotiation', 'won', 'lost'];
 
-        $deals  = $this->svc->paginate(9999);   // tüm fırsatlar
-        // her aşama için mutlaka anahtar oluştur
-        $group  = collect($stages)->mapWithKeys(fn($s)=>
-                    [$s => $deals->where('stage',$s)]
-                );
+        // Hepsini getir
+        $deals = $this->svc->paginate(9999);
 
-        return view('deals.kanban', compact('group','stages'));
+        // Her aşama için grupla
+        $group = collect($stages)
+            ->mapWithKeys(fn($s) => [
+                $s => $deals->where('stage', $s)
+            ]);
+
+        return view('deals.kanban', compact('group', 'stages'));
+    }
+
+    /* ----------------------------------------------------------
+     |  MOVE  –  PATCH /crm/deals/{id}/move
+     * -------------------------------------------------------- */
+    public function move(Request $request, int $id): JsonResponse
+    {
+        $request->validate([
+            'new_stage' => 'required|string|in:new,qualified,proposal,negotiation,won,lost',
+        ]);
+
+        $deal = $this->svc->move($id, $request->new_stage);
+
+        return response()->json($deal);
+    }
+
+
+    // Excel
+    public function exportExcel(int $id)
+    {
+        $deal = $this->svc->find($id);
+        return Excel::download(
+            new DealProposalExport($deal),
+            "teklif-{$id}.xlsx"
+        );
+    }
+
+    // PDF
+    public function exportPdf(int $id)
+    {
+        $deal = $this->svc->find($id);
+        $pdf  = Pdf::loadView('deals.proposal', compact('deal'));
+        return $pdf->download("teklif-{$id}.pdf");
+    }
+
+    public function viewProposal(int $id)
+    {
+        $deal = $this->svc->find($id);
+        $pdf  = Pdf::loadView('deals.proposal', compact('deal'));
+
+        // Browser’da açmak için stream()
+        return $pdf->stream("teklif-{$deal->id}.pdf");
     }
 }

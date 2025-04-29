@@ -33,8 +33,28 @@ Route::prefix('crm')->group(function () {
     Route::resource('companies', CompanyController::class)->except(['create','show']);
     Route::get('companies-table', [CompanyController::class,'index'])->name('companies.table');
 
-    Route::get('deals/kanban', [DealController::class,'kanban'])->name('deals.kanban');
 
     Route::resource('deals', DealController::class)->except(['create','show']);
     Route::get('deals-table', [DealController::class,'index'])->name('deals.table');
+
+    // 1) Önce custom rota – GET /crm/deals/kanban
+    Route::get('deals/kanban', [DealController::class, 'kanban'])
+         ->name('deals.kanban');
+
+    // 2) Ardından status taşıma – PATCH /crm/deals/{id}/move
+    Route::patch('deals/{id}/move', [DealController::class, 'move'])
+         ->name('deals.move');
+
+    // 3) En sonda resource tanımı
+    Route::resource('deals', DealController::class);
+
+
+    // Kanban, move ve resource tanımlarından önce:
+    Route::get('deals/{id}/export-excel', [DealController::class,'exportExcel'])
+         ->name('deals.export.excel');
+    Route::get('deals/{id}/export-pdf',   [DealController::class,'exportPdf'])
+         ->name('deals.export.pdf');
+
+    Route::get('deals/{id}/view-proposal', [DealController::class, 'viewProposal'])
+        ->name('deals.view.proposal');
 });
