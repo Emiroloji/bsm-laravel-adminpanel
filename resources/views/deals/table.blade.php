@@ -3,11 +3,7 @@
         <div class="card-title">
             <h3 class="fw-bold text-gray-800 mb-0">Fırsatlar</h3>
         </div>
-        <div class="card-toolbar">
-            <button class="btn btn-primary" id="btnCreate">
-                <i class="ki-duotone ki-plus fs-2"></i> Yeni Fırsat
-            </button>
-        </div>
+
     </div>
 
     <div class="card-body pt-0">
