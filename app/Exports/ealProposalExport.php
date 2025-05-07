@@ -59,3 +59,4 @@ class DealProposalExport implements FromArray, WithEvents
         ];
     }
 }
+// emircan uysal
