@@ -21,4 +21,19 @@ class LoginController extends Controller
 
         return redirect()->route('login');   // veya '/'
     }
+
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->intended($this->redirectTo);
+        }
+
+        return back()->withErrors([
+            'email' => 'Girdiğiniz bilgiler hatalı.',
+        ]);
+    }
+
 }
