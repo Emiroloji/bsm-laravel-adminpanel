@@ -1,44 +1,45 @@
-<!-- resources/views/layouts/navbar.blade.php -->
-<div id="kt_header" class="header bg-black border-0 fixed-top" style="height: 80px; z-index: 1030;">
-    <div class="container-fluid d-flex justify-content-between align-items-center h-100 px-3">
-        {{-- Sol: Logo + Başlık --}}
-        <a href="{{ url('/') }}" class="d-flex align-items-center text-decoration-none">
-            <img src="{{ asset('assets/media/logos/default-small.svg') }}" alt="Logo" class="img-fluid"
-                style="max-height: 60px;">
-            <span class="ms-3 fs-2 fw-bold text-white m-0">Admin Panel</span>
-        </a>
+{{-- resources/views/layouts/navbar.blade.php --}}
+@auth
+    <div id="kt_header" class="header bg-black border-0 fixed-top" style="height:80px;z-index:1030;">
+        <div class="container-fluid d-flex justify-content-between align-items-center h-100 px-3">
 
-        {{-- Sağ: Mobil menu butonu + Search + Profile --}}
-        <div class="d-flex align-items-center">
-            <!-- Mobilde görünür: sidebar toggle -->
-            <button class="btn btn-link p-0 border-0 text-white d-lg-none me-3" type="button"
-                data-bs-toggle="offcanvas" data-bs-target="#kt_aside_offcanvas" aria-controls="kt_aside_offcanvas">
-                <i class="ki-duotone ki-list fs-2"></i>
-            </button>
+            <a href="{{ url('/dashboard') }}" class="d-flex align-items-center text-decoration-none">
+                <img src="{{ asset('assets/media/logos/default-small.svg') }}" alt="Logo" style="max-height:60px;">
+                <span class="ms-3 fs-2 fw-bold text-white">Admin Panel</span>
+            </a>
 
-            {{-- Desktop only: Search --}}
-            <div class="me-3 d-none d-lg-block" style="width: 250px;">
-                <input type="text" class="form-control border-0 rounded-pill" placeholder="Search..."
-                    style="height: 40px;">
-            </div>
+            <div class="d-flex align-items-center">
 
-            {{-- Profil --}}
-            <div class="dropdown">
-                <a href="#" class="btn btn-link d-flex align-items-center p-0 border-0 text-white"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="{{ asset('assets/media/avatars/300-1.jpg') }}" class="rounded-circle" width="36"
-                        height="36" alt="User">
-                    <span class="ms-2">Admin</span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="{{ url('/profile') }}">Profile</a></li>
-                    <li><a class="dropdown-item" href="{{ url('/settings') }}">Settings</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item text-danger" href="{{ url('/logout') }}">Logout</a></li>
-                </ul>
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ asset('assets/media/avatars/300-1.jpg') }}" class="rounded-circle" width="36"
+                            height="36">
+                        <span class="ms-2 d-none d-lg-inline">{{ Auth::user()->name }}</span>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end shadow" data-bs-offset="0,10">
+                        <li><a class="dropdown-item" href="{{ url('/profile') }}">Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ url('/settings') }}">Settings</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item text-danger" href="#"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                Çıkış Yap
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
+    <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
+
+
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+        @csrf
+    </form>
+@endauth
