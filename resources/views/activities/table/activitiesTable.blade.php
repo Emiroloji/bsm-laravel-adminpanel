@@ -27,12 +27,12 @@
                         data-id="{{ $activity->id }}" data-type="{{ $activity->type }}"
                         data-comment="{{ $activity->comment }}"
                         data-due_at="{{ $activity->due_at?->format('Y-m-d\TH:i') }}">
-                        <i class="ki-duotone ki-pencil fs-2"></i>
+                        <i class="ki-duotone ki-pencil fs-2"></i> Düzenle
                     </button>
 
                     <button class="btn btn-icon btn-sm btn-light-danger activity-delete-btn"
                         data-id="{{ $activity->id }}">
-                        <i class="ki-duotone ki-trash fs-2"></i>
+                        <i class="ki-duotone ki-trash fs-2"></i> Sil
                     </button>
                 </div>
             </li>
