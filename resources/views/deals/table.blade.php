@@ -1,9 +1,9 @@
+{{-- resources/views/deals/table.blade.php --}}
 <div class="card">
     <div class="card-header border-0 pt-6">
         <div class="card-title">
             <h3 class="fw-bold text-gray-800 mb-0">Fırsatlar</h3>
         </div>
-
     </div>
 
     <div class="card-body pt-0">
@@ -32,15 +32,27 @@
                             <td>{{ $deal->close_date?->format('d.m.Y') }}</td>
                             <td>{{ $deal->company?->name }}</td>
                             <td>{{ $deal->contact?->first_name }} {{ $deal->contact?->last_name }}</td>
-                            <td class="text-center">
-                                <button class="btn btn-light-primary btn-sm me-2 btn-edit"
-                                    data-id="{{ $deal->id }}">
-                                    <i class="ki-duotone ki-pencil fs-4"></i> Düzenle
+
+                            {{-- İşlemler sütunu: Activities / Edit / Delete --}}
+                            <td class="text-center d-flex justify-content-center gap-2">
+                                {{-- Activities aç --}}
+                                <button class="btn btn-light-info btn-sm open-activity-modal"
+                                    data-id="{{ $deal->id }}" data-bs-toggle="modal"
+                                    data-bs-target="#activityModal">
+                                    <i class="ki-duotone ki-calendar fs-4"></i>
                                 </button>
+
+                                {{-- Düzenle --}}
+                                <button class="btn btn-light-primary btn-sm btn-edit" data-id="{{ $deal->id }}">
+                                    <i class="ki-duotone ki-pencil fs-4"></i>
+                                </button>
+
+                                {{-- Sil --}}
                                 <button class="btn btn-light-danger btn-sm btn-delete" data-id="{{ $deal->id }}">
-                                    <i class="ki-duotone ki-trash fs-4"></i> Sil
+                                    <i class="ki-duotone ki-trash fs-4"></i>
                                 </button>
                             </td>
+
                             <td class="text-center">
                                 <button class="btn btn-light-primary btn-sm me-2 btn-view-proposal"
                                     data-id="{{ $deal->id }}">
