@@ -21,7 +21,7 @@
         <!-- Deal Aşamaları -->
         <div class="col-md-4">
             <div class="card p-4">
-                <h5 class="card-title mb-3">Deal Stages</h5>
+                <h5 class="card-title mb-3">Fırsat Grafik</h5>
                 <canvas id="stagesChart" height="120"></canvas>
             </div>
         </div>

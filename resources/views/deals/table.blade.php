@@ -39,17 +39,17 @@
                                 <button class="btn btn-light-info btn-sm open-activity-modal"
                                     data-id="{{ $deal->id }}" data-bs-toggle="modal"
                                     data-bs-target="#activityModal">
-                                    <i class="ki-duotone ki-calendar fs-4"></i>
+                                    <i class="ki-duotone ki-calendar fs-4"></i> Aktivite
                                 </button>
 
                                 {{-- Düzenle --}}
                                 <button class="btn btn-light-primary btn-sm btn-edit" data-id="{{ $deal->id }}">
-                                    <i class="ki-duotone ki-pencil fs-4"></i>
+                                    <i class="ki-duotone ki-pencil fs-4"></i> Düzenle
                                 </button>
 
                                 {{-- Sil --}}
                                 <button class="btn btn-light-danger btn-sm btn-delete" data-id="{{ $deal->id }}">
-                                    <i class="ki-duotone ki-trash fs-4"></i>
+                                    <i class="ki-duotone ki-trash fs-4"></i> Sil
                                 </button>
                             </td>
 

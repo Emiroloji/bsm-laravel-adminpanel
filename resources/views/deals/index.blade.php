@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="toolbar d-flex justify-content-between align-items-center mb-5">
-        <h1 class="text-gray-900 fw-bold fs-3">Deals</h1>
+        <h1 class="text-gray-900 fw-bold fs-3">Fırsatlar</h1>
         <button class="btn btn-primary" id="btnCreate">
             <i class="ki-duotone ki-plus fs-2"></i> Yeni Fırsat
         </button>

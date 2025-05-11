@@ -20,11 +20,11 @@
                 <td>{{ $c->industry }}</td>
                 <td>{{ ucfirst($c->size) }}</td>
                 <td class="text-end">
-                    <button class="btn btn-icon btn-sm btn-light-primary btn-edit" data-id="{{ $c->id }}">
-                        <i class="ki-duotone ki-pencil fs-2"></i>
+                    <button class="btn btn-sm btn-light-primary btn-edit" data-id="{{ $c->id }}">
+                        <i class="ki-duotone ki-pencil fs-2"></i> Düzenle
                     </button>
-                    <button class="btn btn-icon btn-sm btn-light-danger btn-delete" data-id="{{ $c->id }}">
-                        <i class="ki-duotone ki-trash fs-2"></i>
+                    <button class="btn btn-sm btn-light-danger btn-delete" data-id="{{ $c->id }}">
+                        <i class="ki-duotone ki-trash fs-2"></i> Sil
                     </button>
                 </td>
             </tr>

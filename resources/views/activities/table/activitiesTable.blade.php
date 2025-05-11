@@ -1,6 +1,6 @@
 {{-- resources/views/activities/table/activitiesTable.blade.php --}}
 @if ($activities->isEmpty())
-    <div class="text-center text-muted py-4">No activities found.</div>
+    <div class="text-center text-muted py-4">Herhangi bir aktivite yok.</div>
 @else
     <ul class="list-group">
         @foreach ($activities as $activity)

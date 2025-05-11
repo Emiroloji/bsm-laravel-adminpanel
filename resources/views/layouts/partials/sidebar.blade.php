@@ -33,14 +33,14 @@
                             <span class="path1"></span><span class="path2"></span><span class="path3"></span>
                         </i>
                     </span>
-                    <span class="menu-title">Todo Page</span>
+                    <span class="menu-title">Not Tutma</span>
                     <span class="menu-arrow"></span>
                 </span>
                 <div class="menu-sub menu-sub-accordion">
                     <div class="menu-item">
                         <a class="menu-link" href="{{ url('/todo') }}">
                             <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                            <span class="menu-title fw-bold text-uppercase fs-7">Todo</span>
+                            <span class="menu-title fw-bold text-uppercase fs-7">Not</span>
                         </a>
                     </div>
                 </div>
@@ -61,14 +61,14 @@
                             <span class="path1"></span><span class="path2"></span><span class="path3"></span>
                         </i>
                     </span>
-                    <span class="menu-title">Contact</span>
+                    <span class="menu-title">Crm Modülü</span>
                     <span class="menu-arrow"></span>
                 </span>
                 <div class="menu-sub menu-sub-accordion">
                     <div class="menu-item">
                         <a class="menu-link" href="{{ url('/crm/contacts') }}">
                             <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                            <span class="menu-title fw-bold text-uppercase fs-7">Contact</span>
+                            <span class="menu-title fw-bold text-uppercase fs-7">Kişiler</span>
                         </a>
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                     <div class="menu-item">
                         <a class="menu-link" href="{{ url('/crm/companies') }}">
                             <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                            <span class="menu-title fw-bold text-uppercase fs-7">Companyes</span>
+                            <span class="menu-title fw-bold text-uppercase fs-7">Şirketler</span>
                         </a>
                     </div>
                 </div>
@@ -84,7 +84,7 @@
                     <div class="menu-item">
                         <a class="menu-link" href="{{ url('/crm/deals') }}">
                             <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                            <span class="menu-title fw-bold text-uppercase fs-7">deals</span>
+                            <span class="menu-title fw-bold text-uppercase fs-7">Fırsatlar</span>
                         </a>
                     </div>
                 </div>
@@ -92,7 +92,7 @@
                     <div class="menu-item">
                         <a class="menu-link" href="{{ url('/crm/deals/kanban') }}">
                             <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                            <span class="menu-title fw-bold text-uppercase fs-7">Kanban</span>
+                            <span class="menu-title fw-bold text-uppercase fs-7">Fırsat Durum</span>
                         </a>
                     </div>
                 </div>
@@ -100,7 +100,7 @@
                     <div class="menu-item">
                         <a class="menu-link" href="{{ url('/crm/dashboard') }}">
                             <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                            <span class="menu-title fw-bold text-uppercase fs-7">Dashboard</span>
+                            <span class="menu-title fw-bold text-uppercase fs-7">Raporlar</span>
                         </a>
                     </div>
                 </div>

@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title fw-bold" id="activityModalLabel">Add Activity</h5>
+                <h5 class="modal-title fw-bold" id="activityModalLabel">Aktivite Ekle</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -13,16 +13,16 @@
                     <input type="hidden" name="subject_id" value="{{ $subject_id }}">
 
                     <select name="type" class="form-select w-auto" required>
-                        <option value="call">Call</option>
-                        <option value="email">Email</option>
-                        <option value="meeting">Meeting</option>
+                        <option value="call">Arama</option>
+                        <option value="email">E-posta</option>
+                        <option value="meeting">Toplantı</option>
                     </select>
 
                     <input type="text" name="comment" class="form-control" placeholder="Comment…">
 
                     <input type="datetime-local" name="due_at" class="form-control w-auto">
 
-                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button type="submit" class="btn btn-primary">Ekle</button>
                 </form>
 
                 {{-- Activity List --}}
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
             </div>
         </div>
     </div>
