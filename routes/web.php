@@ -11,6 +11,8 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DealController;
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\CrmDashboardController;
+
 
 
 /*-------------------------------------------------
@@ -96,6 +98,9 @@ Route::middleware('auth')->group(function () {
             'activities/{activity}',
             [ActivityController::class, 'destroy']
         )->name('activities.destroy');
+
+        Route::get('/dashboard', [CrmDashboardController::class, 'index'])
+         ->name('crm.dashboard');
 
     });
 
