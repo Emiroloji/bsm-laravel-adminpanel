@@ -84,6 +84,19 @@ Route::middleware('auth')->group(function () {
             'activities',
             [ActivityController::class, 'store']
         )->name('activities.store');
+
+        // Aktivite güncelleme
+        Route::patch(
+            'activities/{activity}',
+            [ActivityController::class, 'update']
+        )->name('activities.update');
+
+        // Aktivite silme
+        Route::delete(
+            'activities/{activity}',
+            [ActivityController::class, 'destroy']
+        )->name('activities.destroy');
+
     });
 
     /* Logout (POST) */

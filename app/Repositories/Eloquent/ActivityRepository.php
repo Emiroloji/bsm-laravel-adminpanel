@@ -27,4 +27,18 @@ class ActivityRepository implements ActivityRepositoryInterface
     {
         return $this->model->create($data);
     }
+
+    // ❶ Güncelleme: verilen ID ile record’u bulup günceller
+    public function update(int $id, array $data)
+    {
+        $activity = $this->model->findOrFail($id);
+        $activity->update($data);
+        return $activity;
+    }
+
+    // ❷ Silme: verilen ID’ye sahip record’u siler
+    public function delete(int $id)
+    {
+        return $this->model->destroy($id);
+    }
 }

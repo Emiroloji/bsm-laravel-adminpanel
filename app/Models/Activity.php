@@ -3,10 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Activity extends Model
 {
+    // Toplu atamaya izin verilen alanlar
     protected $fillable = [
         'subject_type',
         'subject_id',
@@ -15,13 +15,16 @@ class Activity extends Model
         'due_at',
     ];
 
-    // Burayı ekleyin:
+    // Tarih alanlarını Carbon nesnesine çevir
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'due_at'     => 'datetime',
     ];
 
+    /**
+     * Polymorphic ilişki: Contact veya Deal gibi subject’e bağlanır
+     */
     public function subject()
     {
         return $this->morphTo();

@@ -40,4 +40,21 @@ class ActivityController extends Controller
         $this->activitySvc->create($data);
         return response()->json(['success' => true]);
     }
+    public function update(Request $req, int $activity)
+    {
+        $data = $req->validate([
+            'type'    => 'required|string',
+            'comment' => 'nullable|string',
+            'due_at'  => 'nullable|date',
+        ]);
+        $this->activitySvc->update($activity, $data);
+        return response()->json(['success' => true]);
+    }
+
+    public function destroy(int $activity)
+    {
+        $this->activitySvc->delete($activity);
+        return response()->json(['success' => true]);
+    }
+
 }
