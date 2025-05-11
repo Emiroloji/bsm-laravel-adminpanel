@@ -18,8 +18,13 @@
 
     {{-- Edit modal HTML’si AJAX ile buraya enjekte ediliyor --}}
     <div id="editModalContent"></div>
-@endsection
 
+    {{-- Activities modal --}}
+    @include('activities.modal.create', [
+        'subject_type' => 'Contact',
+        'subject_id' => 0,
+    ])
+@endsection
 
 @push('scripts')
     <script>
@@ -28,12 +33,16 @@
             const routes = {
                 list: "{{ route('contacts.table') }}",
                 store: "{{ route('contacts.store') }}",
-                base: "{{ url('crm/contacts') }}" // /{id} , /{id}/edit
+                base: "{{ url('crm/contacts') }}", // /crm/contacts/{id}
+                actIndex: (type, id) => `/crm/activities/${type}/${id}`,
+                actStore: "{{ route('activities.store') }}"
             };
 
-            /* ---------- TABLO ---------- */
+            /* ---------- CONTACTS TABLO ---------- */
             function loadContacts() {
-                $.get(routes.list, html => $('#contactTable').html(html));
+                $.get(routes.list, html => {
+                    $('#contactTable').html(html);
+                });
             }
 
             /* ---------- CREATE ---------- */
@@ -76,30 +85,62 @@
             function deleteContact() {
                 const id = $(this).data('id');
                 Swal.fire({
-                        text: 'Silinsin mi?',
-                        icon: 'warning',
-                        showCancelButton: true
-                    })
-                    .then(r => {
-                        if (r.isConfirmed) {
-                            $.ajax({
-                                url: `${routes.base}/${id}`,
-                                type: 'DELETE',
-                                data: {
-                                    _token: "{{ csrf_token() }}"
-                                }
-                            }).done(loadContacts);
-                        }
+                    text: 'Silinsin mi?',
+                    icon: 'warning',
+                    showCancelButton: true
+                }).then(r => {
+                    if (r.isConfirmed) {
+                        $.ajax({
+                            url: `${routes.base}/${id}`,
+                            type: 'DELETE',
+                            data: {
+                                _token: "{{ csrf_token() }}"
+                            }
+                        }).done(loadContacts);
+                    }
+                });
+            }
+
+            /* ---------- ACTIVITIES MODAL ---------- */
+            function showActivityModal() {
+                const id = $(this).data('id');
+                $('#activity-form').find('input[name="subject_id"]').val(id);
+                $('#activity-timeline')
+                    .data('type', 'Contact')
+                    .data('id', id);
+                loadActivities();
+                $('#activityModal').modal('show');
+            }
+
+            function loadActivities() {
+                const type = $('#activity-timeline').data('type');
+                const id = $('#activity-timeline').data('id');
+                $.get(routes.actIndex(type, id), html => {
+                    $('#activity-timeline').html(html);
+                });
+            }
+
+            function submitActivity(e) {
+                e.preventDefault();
+                $.post(routes.actStore, $('#activity-form').serialize())
+                    .done(() => {
+                        $('#activity-form')[0].reset();
+                        loadActivities();
                     });
             }
 
             /* ---------- EVENT BIND ---------- */
             function bindEvents() {
+                // Contacts CRUD
                 $('#btnCreate').on('click', showCreateModal);
                 $('#createForm').on('submit', createContact);
                 $(document).on('click', '.btn-edit', showEditModal);
                 $(document).on('submit', '#editForm', updateContact);
                 $(document).on('click', '.btn-delete', deleteContact);
+
+                // Activities
+                $(document).on('click', '.open-activity-modal', showActivityModal);
+                $(document).on('submit', '#activity-form', submitActivity);
             }
 
             /* ---------- INIT ---------- */

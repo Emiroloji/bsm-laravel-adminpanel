@@ -10,6 +10,8 @@ use App\Http\Controllers\TodoController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DealController;
+use App\Http\Controllers\ActivityController;
+
 
 /*-------------------------------------------------
 |  GUEST  ➜  login & şifre sıfırlama
@@ -71,6 +73,17 @@ Route::middleware('auth')->group(function () {
         Route::get('deals/{id}/export-excel',  [DealController::class,'exportExcel'])->name('deals.export.excel');
         Route::get('deals/{id}/export-pdf',    [DealController::class,'exportPdf'])  ->name('deals.export.pdf');
         Route::get('deals/{id}/view-proposal', [DealController::class,'viewProposal'])->name('deals.view.proposal');
+
+        Route::get(
+            'activities/{subjectType}/{subjectId}',
+            [ActivityController::class, 'index']
+        )->name('activities.index');
+
+        // Yeni aktivite oluşturan POST rotası
+        Route::post(
+            'activities',
+            [ActivityController::class, 'store']
+        )->name('activities.store');
     });
 
     /* Logout (POST) */
