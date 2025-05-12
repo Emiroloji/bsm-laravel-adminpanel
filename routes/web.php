@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+
+use Illuminate\Foundation\Inspiring;
+use Illuminate\Support\Facades\Artisan;
+
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 
@@ -12,6 +16,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DealController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CrmDashboardController;
+use App\Http\Controllers\NotificationController;
 
 
 
@@ -104,8 +109,16 @@ Route::middleware('auth')->group(function () {
 
     });
 
+    Artisan::command('inspire', function () {
+        $this->comment(Inspiring::quote());
+    })->purpose('Display an inspiring quote');
+
     /* Logout (POST) */
     Route::post('/logout', [LoginController::class,'logout'])->name('logout');
+    Route::get('notifications', [NotificationController::class,'index'])
+         ->name('notifications.index');
+    Route::get('notifications/{id}/read', [NotificationController::class,'markRead'])
+         ->name('notifications.markRead');
 });
 
 /*-------------------------------------------------

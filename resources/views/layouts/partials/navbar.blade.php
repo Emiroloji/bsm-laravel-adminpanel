@@ -10,6 +10,42 @@
 
             <div class="d-flex align-items-center">
 
+                @php $unread = auth()->user()->unreadNotifications; @endphp
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link position-relative" data-bs-toggle="dropdown" href="#">
+                        <i class="mdi mdi-bell-ring fs-3 text-warning"></i>
+                        @if ($unread->count())
+                            <span class="badge bg-warning position-absolute top-0 start-100 translate-middle">
+                                {{ $unread->count() }}
+                            </span>
+                        @endif
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end p-2" style="min-width:300px">
+                        @forelse($unread as $note)
+                            <li class="dropdown-item py-2">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>{{ Str::limit($note->data['comment'], 30) }}</strong>
+                                        <div class="small text-muted">{{ $note->created_at->diffForHumans() }}</div>
+                                    </div>
+                                    <a href="{{ route('notifications.markRead', $note->id) }}"
+                                        class="btn btn-sm btn-light">OK</a>
+                                </div>
+                            </li>
+                        @empty
+                            <li class="dropdown-item text-center text-muted">Bildirim yok.</li>
+                        @endforelse
+                        @if ($unread->count())
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li class="text-center">
+                                <a href="{{ route('notifications.index') }}">Tümünü Gör</a>
+                            </li>
+                        @endif
+                    </ul>
+                </li>
                 <div class="dropdown">
                     <a href="#" class="d-flex align-items-center text-white text-decoration-none"
                         data-bs-toggle="dropdown" aria-expanded="false">

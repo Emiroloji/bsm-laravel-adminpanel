@@ -19,4 +19,8 @@ class Contact extends Model
     {
         return $this->morphMany(Activity::class, 'subject')->orderByDesc('created_at');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
