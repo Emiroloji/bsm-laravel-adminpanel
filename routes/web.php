@@ -17,6 +17,10 @@ use App\Http\Controllers\DealController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CrmDashboardController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Animal\AnimalController;
+use App\Http\Controllers\Animal\AnimalOwnerController;
+
+
 
 
 
@@ -108,6 +112,26 @@ Route::middleware('auth')->group(function () {
          ->name('crm.dashboard');
 
     });
+
+
+    Route::prefix('animal')->name('animal.')->group(function() {
+        Route::get('/', [AnimalController::class, 'index'])->name('index');
+        Route::get('/create', [AnimalController::class, 'create'])->name('create');
+        Route::post('/', [AnimalController::class, 'store'])->name('store');
+        Route::get('/{id}', [AnimalController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [AnimalController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [AnimalController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AnimalController::class, 'destroy'])->name('destroy');
+    });
+    Route::prefix('animal-owner')->name('animal-owner.')->group(function(){
+        Route::get('/', [AnimalOwnerController::class, 'index'])->name('index');
+        Route::get('/create', [AnimalOwnerController::class, 'create'])->name('create');
+        Route::post('/', [AnimalOwnerController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [AnimalOwnerController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [AnimalOwnerController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AnimalOwnerController::class, 'destroy'])->name('destroy');
+    });
+
 
     Artisan::command('inspire', function () {
         $this->comment(Inspiring::quote());
